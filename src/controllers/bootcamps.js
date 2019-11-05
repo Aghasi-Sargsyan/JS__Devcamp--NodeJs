@@ -39,5 +39,5 @@ exports.updateBootcamp = (req, res, next)=>{
 exports.deleteBootcamp = (req, res, next)=>{
 	const id = req.params.id.toString();
 	bootcamps = bootcamps.filter(el => id !== el.id.toString());
-	res.statusJson(200, createResponse( 'update bootcamp by id'));
+	res.statusJson(200, createResponse( 'delete bootcamp by id'));
 };
