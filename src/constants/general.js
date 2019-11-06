@@ -1,0 +1,16 @@
+const ERROR_NAMES = {
+	CAST_ERROR : 'CastError',
+	VALID_ERROR : 'ValidationError',
+	DUPLICATE_KEY: 11000
+};
+
+const ERROR_STATUSES = {
+	[ERROR_NAMES.CAST_ERROR] : 404,
+	[ERROR_NAMES.VALID_ERROR] : 400,
+	[ERROR_NAMES.DUPLICATE_KEY] : 400,
+};
+
+module.exports = {
+	ERROR_NAMES,
+	ERROR_STATUSES
+};
