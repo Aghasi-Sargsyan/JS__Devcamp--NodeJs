@@ -18,13 +18,13 @@ function genErrorMessage(err){
 	const tempError = {...err};
 	let {code, name, message, value} = tempError;
 
-	const errName = code || name;
+	const errorName = code || name;
 
-	if (errName === CAST_ERROR)
+	if (errorName === CAST_ERROR)
 		return `Resource not found with id of ${value}`;
-	if (errName === VALID_ERROR)
+	if (errorName === VALID_ERROR)
 		return Object.values(err.errors).map(val => val.message);
-	if (errName === DUPLICATE_KEY)
+	if (errorName === DUPLICATE_KEY)
 		return 'Duplicate field value entered' ;
 
 	return message;

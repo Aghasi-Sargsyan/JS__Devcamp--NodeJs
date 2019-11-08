@@ -1,5 +1,5 @@
 const {createResponse} = require('../helpers/general');
-const Bootcamp = require('../models/BootcampModel');
+const BootcampModel = require('../models/BootcampModel');
 const {ErrorResponse} = require('../helpers/general');
 const {ERROR_NAMES} = require('../constants/general');
 const asyncHandler = require('../middlewares/asyncHandler');
@@ -8,7 +8,7 @@ const asyncHandler = require('../middlewares/asyncHandler');
 //@route GET api/v1/bootcamps
 //@access Public
 exports.getBootcamps = asyncHandler(async (req, res, next) => {
-	const bootcamps = await Bootcamp.find();
+	const bootcamps = await BootcampModel.find();
 	res.statusJson(200, createResponse(bootcamps, null, null, {count: bootcamps.length}));
 });
 
@@ -17,7 +17,7 @@ exports.getBootcamps = asyncHandler(async (req, res, next) => {
 //@access Public
 exports.getBootcamp = asyncHandler(async (req, res, next) => {
 	const id = req.params.id;
-	const bootcamp = await Bootcamp.findById(id);
+	const bootcamp = await BootcampModel.findById(id);
 
 	if (!bootcamp) throw new ErrorResponse(ERROR_NAMES.CAST_ERROR, req.params.id);
 
@@ -28,7 +28,7 @@ exports.getBootcamp = asyncHandler(async (req, res, next) => {
 //@route POST api/v1/bootcamps
 //@access Private
 exports.createBootcamp = asyncHandler(async (req, res, next) => {
-	const bootcamp = await Bootcamp.create(req.body);
+	const bootcamp = await BootcampModel.create(req.body);
 	res.statusJson(201, createResponse(bootcamp));
 });
 
@@ -37,7 +37,7 @@ exports.createBootcamp = asyncHandler(async (req, res, next) => {
 //@access Private
 exports.updateBootcamp = asyncHandler(async (req, res, next) => {
 	const id = req.params.id;
-	const bootcamp = await Bootcamp.findByIdAndUpdate(id, req.body, {
+	const bootcamp = await BootcampModel.findByIdAndUpdate(id, req.body, {
 		new: true, runValidators: true
 	});
 
@@ -51,7 +51,7 @@ exports.updateBootcamp = asyncHandler(async (req, res, next) => {
 //@access Private
 exports.deleteBootcamp = asyncHandler(async (req, res, next) => {
 	const id = req.params.id;
-	const bootcamp = await Bootcamp.findByIdAndDelete(id);
+	const bootcamp = await BootcampModel.findByIdAndDelete(id);
 
 	if (!bootcamp) throw new ErrorResponse(ERROR_NAMES.CAST_ERROR, req.params.id);
 
