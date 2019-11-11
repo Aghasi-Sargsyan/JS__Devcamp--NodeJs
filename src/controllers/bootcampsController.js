@@ -57,3 +57,18 @@ exports.deleteBootcamp = asyncHandler(async (req, res, next) => {
 
 	res.statusJson(200, createResponse(null, null, true));
 });
+
+//@desc Get Bootcamps By Distance
+//@route GET api/v1/bootcamps/radius/:latLng/:distance
+//@access Public
+exports.getBootcampsInRadius = asyncHandler(async (req, res, next) => {
+	const {latLng, distance} = req.params;
+	const [lat, lng] = latLng.split(',');
+
+	const EARTH_RADIUS = 6371;
+	const bootcamps = await BootcampModel.find(
+		{ location: { $geoWithin: { $centerSphere: [ [lng, lat], distance / EARTH_RADIUS] } } }
+	);
+
+	res.statusJson(200, createResponse(bootcamps,null,null, {count: bootcamps.length}));
+});

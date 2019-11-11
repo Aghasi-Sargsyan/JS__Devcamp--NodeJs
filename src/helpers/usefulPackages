@@ -1,0 +1,10 @@
+colors
+dotenv
+express
+geolib
+http-status-codes
+mongoose
+morgan
+node-geocoder
+slugify
+nodemon

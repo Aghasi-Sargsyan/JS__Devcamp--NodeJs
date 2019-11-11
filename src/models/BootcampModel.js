@@ -1,6 +1,6 @@
 const mongoose = require('mongoose');
 const slugify = require('slugify');
-const geocoder = require('../helpers/geocoder');
+const geocoder = require('../config/geocoder');
 
 const schemaErrGenerator = {
 	missingErr: (name)=> `Please add ${name}`,
@@ -9,6 +9,9 @@ const schemaErrGenerator = {
 	moreThanErr: (name, num) => `${name} can not be more than ${num}`,
 	lessThanErr: (name, num) => `${name} can not be less than ${num}`
 };
+
+const emailRegex = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+const websiteRegex = /https?:\/\/(www\.)?[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_\+.~#?&//=]*)/;
 
 const {missingErr, lengthErr, validErr, lessThanErr, moreThanErr} = schemaErrGenerator;
 
@@ -23,15 +26,12 @@ const BootcampSchema = new mongoose.Schema({
 	slug: String,
 	description: {
 		type: String,
-		required: [true, missingErr('description')],
+		// required: [true, missingErr('description')],
 		maxLength: [500, 'Description can not be more than 500 chars']
 	},
 	website: {
 		type: String,
-		match: [
-			/https?:\/\/(www\.)?[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_\+.~#?&//=]*)/,
-			validErr('website')
-		]
+		match: [ websiteRegex, validErr('website') ]
 	},
 	phone: {
 		type: String,
@@ -39,8 +39,8 @@ const BootcampSchema = new mongoose.Schema({
 	},
 	email:{
 		type:String,
-		required: [true, 'Please add email'],
-		match: [/^\w+@[a-zA-Z_]+?\.[a-zA-Z]{2,3}$/, validErr('email')]
+		// required: [true, 'Please add email'],
+		match: [ emailRegex, validErr('email') ]
 	},
 	address: {
 		type: String,

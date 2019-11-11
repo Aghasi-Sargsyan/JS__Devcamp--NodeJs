@@ -5,7 +5,7 @@ const {CAST_ERROR, VALID_ERROR, DUPLICATE_KEY} = ERROR_NAMES;
 
 function errorHandler(err, req, res, next) {
 
-	console.log(err);
+	console.log('ErrorHandler: ', err);
 
 	res.statusJson(genStatusCode(err.name), createResponse(null, genErrorMessage(err)))
 }
