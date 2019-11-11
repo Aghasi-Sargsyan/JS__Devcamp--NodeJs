@@ -40,4 +40,11 @@ exports.ErrorResponse = class ErrorResponse extends Error{
 };
 
 
+exports.removeQueryField = (query) => {
+	const removableFields = ['select', 'sort', 'page', 'limit'];
+
+	const tempQuery = {...query};
+	removableFields.forEach(field => delete tempQuery[field]);
+	return tempQuery;
+};
 

@@ -1,6 +1,6 @@
 const {createResponse} = require('../helpers/general');
 const BootcampModel = require('../models/BootcampModel');
-const {ErrorResponse} = require('../helpers/general');
+const {ErrorResponse, removeQueryField} = require('../helpers/general');
 const {ERROR_NAMES} = require('../constants/general');
 const asyncHandler = require('../middlewares/asyncHandler');
 
@@ -8,8 +8,40 @@ const asyncHandler = require('../middlewares/asyncHandler');
 //@route GET api/v1/bootcamps
 //@access Public
 exports.getBootcamps = asyncHandler(async (req, res, next) => {
-	const bootcamps = await BootcampModel.find();
-	res.statusJson(200, createResponse(bootcamps, null, null, {count: bootcamps.length}));
+
+	const myReqQuery = removeQueryField(req.query);
+
+	const query = BootcampModel.find(myReqQuery);
+
+	if (req.query.select){
+		const fields =  req.query.select.split(',').join(' ');
+		query.select(fields);
+	}
+
+	if (req.query.sort){
+		const fields = req.query.sort.split(',').join(' ');
+		query.sort(fields);
+	}else {
+		query.sort('-createdAt');
+	}
+
+	const page = parseInt(req.query.page) || 1;
+	const limit = parseInt(req.query.limit) || 25;
+	const firstIndex = (page -1) * limit;
+	const lastIndex = page * limit;
+	const total = await BootcampModel.countDocuments();
+
+	const pagination = {
+		limit,
+		nextPage: lastIndex < total ? page+1 : null,
+		prevPage: firstIndex > 0 ? page-1 : null
+	};
+
+	query.skip(firstIndex).limit(limit);
+
+	const bootcamps = await query;
+
+	res.statusJson(200, createResponse(bootcamps, null, null, {pagination, count: bootcamps.length}));
 });
 
 //@desc Get single bootcamp
